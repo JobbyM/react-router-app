@@ -56,7 +56,10 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <Route path="about" component={About} />
-      <Route path="inbox" component={Inbox} />
+      <Route path="inbox" component={Inbox}>
+        {/* 添加一个路由，嵌套进我们想要嵌套的UI 里 */}
+        <Route path="messages/:id" component={Message} />
+      </Route>
     </Route>
   </Router>
 ), document.getElementById('app')
