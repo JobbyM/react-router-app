@@ -53,7 +53,7 @@ class Inbox extends Component {
 // 最后，我们用一些<Route> 来渲染<Router>。
 // 这些就是路由提供的我们想要的东西。
 ReactDOM.render((
-  <Router>
+  <Router history={browserHistory}>
     <Route path="/" component={App}>
       <Route path="about" component={About} />
       <Route path="index" component={Inbox} />
