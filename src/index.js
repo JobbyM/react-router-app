@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 // 首先我们需要导入一些组件……
-import { Router, Route, Link, browserHistory } from 'react-router';
+import { Router, Route, Link, browserHistory, IndexRoute, Redirect } from 'react-router';
 
 // 然后我们从应用中删除一堆代码和
 // 增加一些<Link> 元素……
@@ -70,17 +70,62 @@ class Inbox extends Component {
   }
 }
 
+class Dashboard extends Component {
+  render(){
+    return (
+      <div>Welcome to the App!</div>
+    )
+  }
+}
+
 // 最后，我们用一些<Route> 来渲染<Router>。
 // 这些就是路由提供的我们想要的东西。
-ReactDOM.render((
-  <Router history={browserHistory}>
-    <Route path="/" component={App}>
-      <Route path="about" component={About} />
-      <Route path="inbox" component={Inbox}>
-        {/* 添加一个路由，嵌套进我们想要嵌套的UI 里 */}
-        <Route path="messages/:id" component={Message} />
-      </Route>
-    </Route>
-  </Router>
-), document.getElementById('app')
+// ReactDOM.render((
+//   <Router history={browserHistory}>
+//     <Route path="/" component={App}>
+//       {/* 当Url为/ 时渲染Dashboard */}
+//       <IndexRoute component={Dashboard}/>
+//       <Route path="about" component={About} />
+//       <Route path="inbox" component={Inbox}>
+//         {/* 使用/messages/:id 替换 messages/:id */}
+//         <Route path="/messages/:id" component={Message} />
+//
+//         {/* 跳转 messages/:id 到 /messages/:id */}
+//         <Redirect from="messages/:id" to="/messages/:id"/>
+//       </Route>
+//     </Route>
+//   </Router>
+// ), document.getElementById('app')
+// )
+
+const routeConfig = [
+  {
+    path: '/',
+    component: App,
+    indexRoute: { component: Dashboard },
+    childRoutes: [
+      { path: 'about', component: About },
+      { path: 'inbox',
+        component: Inbox,
+        childRoutes: [
+          { path: 'messages/:id',
+            onEnter: ({ params }, replace)=>replace(`/messages/${params.id}`)
+          }
+        ]
+      },
+      {
+        component: Inbox,
+        childRoutes: [
+          { path: 'messages/:id', component: Message}
+        ]
+      }
+    ]
+  }
+]
+
+ReactDOM.render(
+  <Router
+    history={browserHistory}
+    routes={routeConfig} />,
+  document.getElementById('app')
 )
