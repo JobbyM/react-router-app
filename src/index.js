@@ -38,8 +38,10 @@ class Message extends Component {
     // 来自于路径 `/inbox/messages/:id`
     const id = this.props.params.id;
 
+    const baz = this.props.location.query.baz;
+
     this.setState({
-      message: id
+      message: id + baz
     })
   }
   render(){
