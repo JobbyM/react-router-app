@@ -24,9 +24,27 @@ class App extends Component {
 
 // 新建一个组件让其在Inbox 内部渲染
 class Message extends Component {
+  constructor(props){
+    super(props)
+
+    let message = 'Message'
+
+    this.state = {
+      message : message
+    }
+  }
+
+  componentDidMount(){
+    // 来自于路径 `/inbox/messages/:id`
+    const id = this.props.params.id;
+
+    this.setState({
+      message: id
+    })
+  }
   render(){
     return (
-      <h3>Message</h3>
+      <h3>Message: {this.state.message}</h3>
     )
   }
 }
