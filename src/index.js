@@ -78,6 +78,47 @@ class Dashboard extends Component {
   }
 }
 
+class Invoice extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      invoice: null
+    }
+  }
+
+  componentDidMount(){
+    // 上面的步骤2，在此进行初始化数据
+    this.fetchInvoice()
+  }
+
+  componentDidUpdate(preProps){
+    // 上面的步骤3，通过参数更新数据
+    let oldId = preProps.params.invoiceId
+    let newId = this.props.params.invoiceId
+    if(newId !== oldId){
+      this.fetchInvoice()
+    }
+  }
+
+  componentWillUnmount(){
+    // 上面的步骤4，在组件移除前忽略掉正在进行中的请求
+    this.ignoreLastFetch = true
+  }
+
+  fetchInvoice(){
+    let url = `/api/invoices/${this.props.params.invoiceId}`
+    this.request = fetch(url, (err, data)=>{
+      if(!this.ignoreLastFetch){
+        this.setState({ invoice: data.invoice })
+      }
+    })
+  }
+
+  render(){
+    return <InvoiceView invoice={this.state.invoice} />
+  }
+}
+
 // 最后，我们用一些<Route> 来渲染<Router>。
 // 这些就是路由提供的我们想要的东西。
 // ReactDOM.render((
